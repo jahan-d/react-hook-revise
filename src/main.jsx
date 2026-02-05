@@ -10,5 +10,5 @@ createRoot(document.getElementById('root')).render(
     <FriendsProvider>
       <RouterProvider router={router} />
     </FriendsProvider>
-  </StrictMode>,
+  </StrictMode>
 )
