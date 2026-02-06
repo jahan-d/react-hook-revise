@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router';
 
 const link = (
@@ -8,8 +8,18 @@ const link = (
     </>
 )
 const Navbar = () => {
+    const [user, setUser] = useState(false);
+    const handleClick = () => {
+        // if(user==false){
+        //     setUser(true)
+        // }else{
+        //     setUser(false)
+        // }
+        setUser(!user)
+    }
+
     return (
-        <div className="navbar bg-base-100 shadow-sm">
+        <div className={`navbar  shadow-sm bg-base-200`}>
             <div className="navbar-start">
                 <div className="dropdown">
                     <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -29,7 +39,9 @@ const Navbar = () => {
                 </ul>
             </div>
             <div className="navbar-end">
-                <a className="btn">Button</a>
+                {
+                    user ? <a onClick={handleClick} className={`btn bg-red-400 text-red-900 `}>Logout</a> : <a onClick={handleClick} className={`btn bg-green-200 text-green-950`}>Login</a>
+                }
             </div>
         </div>
     );
