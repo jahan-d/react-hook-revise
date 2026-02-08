@@ -3,8 +3,9 @@ import { Link, NavLink } from 'react-router';
 
 const link = (
     <>
-        <li><NavLink to="/addItemPage">Add item</NavLink></li>
-        <li><NavLink to="/showItemPage">Show Item Page</NavLink></li>
+        <li><NavLink to="/addItemPage">Add friend</NavLink></li>
+        <li><NavLink to="/showItemPage">Show friend</NavLink></li>
+        <li><NavLink to="/productManagement">product Manager</NavLink></li>
     </>
 )
 const Navbar = () => {
@@ -40,7 +41,8 @@ const Navbar = () => {
             </div>
             <div className="navbar-end">
                 {
-                    user ? <a onClick={handleClick} className={`btn bg-red-400 text-red-900 `}>Logout</a> : <a onClick={handleClick} className={`btn bg-green-200 text-green-950`}>Login</a>
+                    user ? <Link onClick={handleClick} className={`btn bg-red-400 text-red-900 `}>Logout</Link> :
+                        <Link onClick={handleClick} className={`btn bg-green-200 text-green-950`}>Login</Link>
                 }
             </div>
         </div>

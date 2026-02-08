@@ -1,9 +1,18 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, use } from 'react';
 import { FriendsContext } from '../providers/Provider';
+// import { useLoaderData } from 'react-router';
+// import axios from 'axios';
 
 const ShowPage = () => {
+
+  // const frnds = useLoaderData();
+
   const { friends } = useContext(FriendsContext);
   const [value, setValue] = useState('');
+
+  // How AXIOS work -> 
+  // const friendsPromise = axios.get('friends.json'); //this line creates a promise 
+  // const friendsData = use(friendsPromise); //this line is gonna resolve the promise
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
