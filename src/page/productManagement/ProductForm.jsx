@@ -1,56 +1,75 @@
-import React from 'react';
-import toast from 'react-hot-toast';
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 const ProductForm = ({ handleAddProduct }) => {
-    const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
-    const handleProductSubmit = (e) => {
-        e.preventDefault();
-        const form = e.target;
-        const name = form.name.value;
-        const price = form.price.value;
-        const quantity = form.quantity.value;
-        // console.log(name, price, quantity);
+  const handleProductSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.target;
 
-        if(name.length === 0){
-            setError('Name cannot be empty');
-            return;
-        }else if(price.length === 0){
-            setError('Price cannot be empty');
-            return;
-        }else if(isNaN(price) || price < 0){
-            setError('Price must be a valid positive number');
-            return;
-        }else if(quantity.length === 0){
-            setError('Quantity cannot be empty');
-            return;
-        }else if(isNaN(quantity) || quantity < 0){
-            setError('Quantity must be a valid positive number');
-            return;
-        }else{
-            setError('');
-        }
+    const name = form.name.value.trim();
+    const price = Number(form.price.value);
+    const quantity = Number(form.quantity.value);
 
-        const product = { name, price, quantity };
-        handleAddProduct(product);
-    toast.success(`${product.name} - $${product.price} Quantity: ${product.quantity} added successfully!`);
+    if (!name) return setError("Name cannot be empty");
+    if (isNaN(price) || price < 0) return setError("Invalid price");
+    if (isNaN(quantity) || quantity < 0) return setError("Invalid quantity");
 
+    setError("");
+
+    const product = { name, price, quantity };
+
+    try {
+      const res = await fetch("http://localhost:3000/product", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(product),
+      });
+
+      if (!res.ok) throw new Error("Failed");
+
+      const data = await res.json();
+      handleAddProduct({ ...product, _id: data.insertedId });
+
+      toast.success("Product added");
+      form.reset();
+    } catch {
+      toast.error("Failed to add product");
     }
+  };
 
-    return (
-        <div className="p-5 bg-gray-900 text-white">
-            <form className="flex flex-col gap-3 max-w-sm" onSubmit={handleProductSubmit}>
-                <input required type="text" name='name' placeholder='Product Name' className="p-2 bg-gray-800 text-white border border-gray-600 rounded placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                <br />
-                <input required type="text" name='price' placeholder='Price' className="p-2 bg-gray-800 text-white border border-gray-600 rounded placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                <br />
-                <input required type="text" name='quantity' placeholder='Product Quantity' className="p-2 bg-gray-800 text-white border border-gray-600 rounded placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                <br />
-                <input type="submit" value="submit" className="p-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600 transition-colors" />
-            </form>
-            <p className="text-red-500"><small>{error}</small></p>
-        </div>
-    );
+  return (
+    <div className="bg-white rounded-xl shadow-md p-6">
+      <h2 className="text-xl font-semibold mb-4">Add Product</h2>
+
+      <form onSubmit={handleProductSubmit} className="space-y-4">
+        <input
+          name="name"
+          placeholder="Product Name"
+          className="w-full px-4 py-2 border rounded-lg text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 outline-none"
+        />
+
+        <input
+          name="price"
+          placeholder="Price"
+          className="w-full px-4 py-2 border rounded-lg text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 outline-none"
+        />
+
+        <input
+          name="quantity"
+          placeholder="Quantity"
+          className="w-full px-4 py-2 border rounded-lg text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 outline-none"
+        />
+
+        <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
+          Add Product
+        </button>
+      </form>
+
+      {error && <p className="text-red-500 mt-3 text-sm">{error}</p>}
+    </div>
+  );
 };
 
 export default ProductForm;
